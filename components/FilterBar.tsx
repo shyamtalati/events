@@ -4,6 +4,12 @@ import { useMemo, useState } from 'react';
 import { type Event, type Tag } from '@/data/events';
 import { EventCard } from '@/components/EventCard';
 import { filterEvents, type DateRange } from '@/lib/events';
+import {
+  canonicalizeAlertPreferences,
+  describeAlertPreferences,
+  type AlertStartPayload,
+  type AlertStartResponse,
+} from '@/lib/alerts';
 
 type FilterBarProps = {
   events: Event[];
@@ -15,6 +21,11 @@ export function FilterBar({ events, tags, hosts }: FilterBarProps) {
   const [dateRange, setDateRange] = useState<DateRange>('all');
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [selectedHosts, setSelectedHosts] = useState<string[]>([]);
+  const [email, setEmail] = useState('');
+  const [consent, setConsent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [feedback, setFeedback] = useState<{ tone: 'info' | 'success' | 'error'; text: string } | null>(null);
+  const [debugUrl, setDebugUrl] = useState<string | null>(null);
 
   const toggleTag = (tag: Tag) => {
     setSelectedTags((current) =>
@@ -32,6 +43,71 @@ export function FilterBar({ events, tags, hosts }: FilterBarProps) {
     () => filterEvents(events, dateRange, selectedTags, selectedHosts),
     [dateRange, events, selectedHosts, selectedTags],
   );
+  const alertPreferences = useMemo(
+    () =>
+      canonicalizeAlertPreferences({
+        dateRange,
+        tags: selectedTags,
+        hosts: selectedHosts,
+      }),
+    [dateRange, selectedHosts, selectedTags],
+  );
+  const alertSummary = useMemo(() => describeAlertPreferences(alertPreferences), [alertPreferences]);
+
+  const readJson = async <T,>(response: Response) => {
+    const data = (await response.json().catch(() => null)) as T | null;
+    if (!data) {
+      throw new Error('The server returned an invalid response.');
+    }
+
+    return data;
+  };
+
+  const requestConfirmationEmail = async () => {
+    setSubmitting(true);
+    setFeedback(null);
+    setDebugUrl(null);
+
+    try {
+      const payload: AlertStartPayload = {
+        email,
+        consent,
+        preferences: alertPreferences,
+      };
+
+      const response = await fetch('/api/alerts/start', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await readJson<AlertStartResponse>(response);
+      if (!response.ok || !result.ok) {
+        throw new Error(result.message || 'We could not send the confirmation email.');
+      }
+
+      setEmail('');
+      setConsent(false);
+      setDebugUrl(result.debugUrl ?? null);
+      setFeedback({ tone: 'info', text: result.message });
+    } catch (error) {
+      setFeedback({
+        tone: 'error',
+        text: error instanceof Error ? error.message : 'We could not send the confirmation email.',
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const feedbackClassName =
+    feedback?.tone === 'success'
+      ? 'border-emerald-200 bg-emerald-50 text-emerald-900'
+      : feedback?.tone === 'error'
+        ? 'border-rose-200 bg-rose-50 text-rose-900'
+        : 'border-blue-200 bg-blue-50 text-blue-900';
 
   return (
     <div className="space-y-6">
@@ -106,6 +182,79 @@ export function FilterBar({ events, tags, hosts }: FilterBarProps) {
               })}
             </div>
           </fieldset>
+        </div>
+      </section>
+
+      <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(22rem,1fr)]">
+          <div className="space-y-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-blue-700">Email alerts</p>
+              <h2 className="mt-2 text-xl font-semibold tracking-tight text-slate-900">Get a calm digest instead of a flood</h2>
+            </div>
+            <p className="max-w-2xl text-sm text-slate-600">
+              We send a daily email digest only when there are new matching events in the next week. That means no
+              repeated reminders for the same event and never more than one alert email per day.
+            </p>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
+              <p className="font-medium text-slate-900">Current alert filter</p>
+              <p className="mt-1">{alertSummary}</p>
+            </div>
+            <p className="text-xs leading-5 text-slate-500">
+              Email addresses are encrypted at rest in Netlify Blobs and only handled inside Netlify Functions.
+              Delivery credentials stay in Netlify environment variables instead of the client.
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+            <div className="space-y-4">
+              <label className="block space-y-2">
+                <span className="text-sm font-medium text-slate-700">Email address</span>
+                <input
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder="you@drexel.edu"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20"
+                />
+              </label>
+
+              <label className="flex items-start gap-3 rounded-lg border border-slate-200 bg-white p-3">
+                <input
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(event) => setConsent(event.target.checked)}
+                  className="mt-1 h-4 w-4 rounded border-slate-300 text-accent focus:ring-accent"
+                />
+                <span className="text-sm leading-5 text-slate-600">
+                  I agree to receive a filter-based email digest for matching Drexel events. We only send when there
+                  are new matches, and never more than once per day.
+                </span>
+              </label>
+
+              <button
+                type="button"
+                onClick={requestConfirmationEmail}
+                disabled={submitting}
+                className="w-full rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+              >
+                {submitting ? 'Sending confirmation...' : 'Send confirmation email'}
+              </button>
+
+              {debugUrl ? (
+                <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+                  Local testing link:{' '}
+                  <a href={debugUrl} className="font-semibold underline decoration-amber-500 underline-offset-2">
+                    Confirm email alerts
+                  </a>
+                </div>
+              ) : null}
+
+              {feedback ? <p className={`rounded-lg border px-3 py-2 text-sm ${feedbackClassName}`}>{feedback.text}</p> : null}
+            </div>
+          </div>
         </div>
       </section>
 

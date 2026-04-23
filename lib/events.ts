@@ -1,4 +1,4 @@
-import { events, type Event, type Tag } from '@/data/events';
+import { events, type Event, type Tag } from '../data/events';
 
 export type DateRange = 'this-week' | 'this-month' | 'all';
 

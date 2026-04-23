@@ -11,6 +11,12 @@ npm run dev
 
 Then open `http://localhost:3000`.
 
+If you want to test the alert flow locally, run the site through Netlify so the Functions and Blobs APIs are available:
+
+```bash
+npx netlify dev
+```
+
 ## Push code to GitHub (important)
 
 If GitHub still shows only `.gitkeep`, your local commits are not pushed yet or they are on a different branch.
@@ -40,7 +46,62 @@ git push origin work:main
    - Publish directory: `out`
 5. Deploy.
 
-This repo uses static export mode (`next.config.mjs` with `output: "export"`), which is ideal for this MVP since all pages are pre-rendered and no server runtime is required.
+This repo still uses static export mode (`next.config.mjs` with `output: "export"`) for the event pages. Email alerts run separately through Netlify Functions and Netlify Blobs.
+
+## Email alerts
+
+Users can now opt into email alerts directly from the filter view.
+
+### What the flow does
+
+- The user chooses filters and submits an email address.
+- A confirmation link is emailed to that address before the subscription becomes active.
+- The verified subscription is stored server-side in Netlify Blobs.
+- An hourly scheduled Netlify Function checks for new matching events in the next 7 days and sends a digest.
+- Users receive at most one digest email per day.
+- The same event is not emailed repeatedly once it has already been included in a digest.
+- Every alert includes a one-click unsubscribe link.
+
+### Security and privacy notes
+
+- Email addresses are never stored in the client.
+- Email addresses are encrypted at rest before they are written to Netlify Blobs.
+- Subscription creation is rate-limited and requires a confirmation email, which reduces abuse and accidental signups.
+- Email delivery credentials stay in Netlify environment variables.
+- Unsubscribing removes the saved subscription record.
+
+### Required Netlify environment variables
+
+Add these in Netlify under the `universityevent` site settings:
+
+```txt
+ALERTS_ENCRYPTION_KEY
+RESEND_API_KEY
+ALERTS_FROM_EMAIL
+```
+
+`ALERTS_FROM_EMAIL` should be a sender address from a verified Resend domain, for example `Drexel Events <alerts@yourdomain.com>`.
+The Resend test sender `onboarding@resend.dev` is only suitable for sending to your own email address during testing, not to public users.
+
+### Resend setup without exposing secrets
+
+Do not hardcode your API key in the repo. Keep it in a local env file for development and in Netlify environment variables for production.
+
+```js
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+```
+
+If you are following the Resend quickstart snippet locally, replace `re_xxxxxxxxx` with your real API key in `.env.local`, not in committed source.
+
+Generate the encryption key with one of these:
+
+```bash
+openssl rand -base64 32
+# or
+openssl rand -hex 32
+```
 
 ## Updating events from email
 

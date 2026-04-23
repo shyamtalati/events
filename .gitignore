@@ -2,7 +2,9 @@
 /.pnp
 .pnp.js
 /.next
+/.netlify
 /out
+tsconfig.tsbuildinfo
 .DS_Store
 *.pem
 npm-debug.log*
