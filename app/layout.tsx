@@ -6,21 +6,22 @@ import { Header } from '@/components/Header';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Drexel Finance Events',
+  metadataBase: new URL('https://universityevent.netlify.app'),
+  title: 'Drexel University Events',
   description:
-    'A clean, curated list of upcoming finance and business events for Drexel students.',
+    'A clean, curated list of upcoming Drexel events, with the directory expanding from finance and career programming to university-wide student events.',
   openGraph: {
-    title: 'Drexel Finance Events',
+    title: 'Drexel University Events',
     description:
-      'A clean, curated list of upcoming finance and business events for Drexel students.',
+      'A clean, curated list of upcoming Drexel events, with the directory expanding from finance and career programming to university-wide student events.',
     type: 'website',
-    url: 'https://drexel-finance-events.vercel.app',
+    url: 'https://universityevent.netlify.app',
     images: [
       {
         url: '/og-image.svg',
         width: 1200,
         height: 630,
-        alt: 'Drexel Finance Events',
+        alt: 'Drexel University Events',
       },
     ],
   },

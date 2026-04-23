@@ -39,12 +39,12 @@ export function generateMetadata({ params }: EventPageProps): Metadata {
 
   if (!event) {
     return {
-      title: 'Event not found | Drexel Finance Events',
+      title: 'Event not found | Drexel University Events',
     };
   }
 
   return {
-    title: `${event.title} | Drexel Finance Events`,
+    title: `${event.title} | Drexel University Events`,
     description: event.description,
   };
 }

@@ -117,7 +117,8 @@ export function FilterBar({ events, tags, hosts }: FilterBarProps) {
         </ul>
       ) : (
         <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-600">
-          No events match your filters right now. Try broadening your selections.
+          No events match your filters right now. Try broadening your selections or check back as more campus
+          organizations are added.
         </div>
       )}
     </div>

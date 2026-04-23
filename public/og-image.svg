@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Drexel Finance Events">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Drexel University Events">
   <rect width="1200" height="630" fill="#faf9f6" />
   <rect y="470" width="1200" height="160" fill="#1d4ed8" />
-  <text x="80" y="280" fill="#0f172a" font-family="Inter, Arial, sans-serif" font-size="72" font-weight="700">Drexel Finance Events</text>
-  <text x="80" y="340" fill="#334155" font-family="Inter, Arial, sans-serif" font-size="34">Upcoming finance and business events in one clean feed.</text>
+  <text x="80" y="280" fill="#0f172a" font-family="Inter, Arial, sans-serif" font-size="72" font-weight="700">Drexel University Events</text>
+  <text x="80" y="340" fill="#334155" font-family="Inter, Arial, sans-serif" font-size="34">Upcoming campus events in one clean feed.</text>
 </svg>

@@ -1,6 +1,6 @@
-# Drexel Finance Events (Web MVP)
+# Drexel University Events (Web MVP)
 
-A minimal Next.js web app for discovering Drexel finance/business events without app-store friction.
+A minimal Next.js web app for discovering Drexel events in one place, starting with finance and career programming and expanding university-wide.
 
 ## Local development
 
