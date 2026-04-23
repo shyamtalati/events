@@ -9,6 +9,9 @@
 body {
   @apply bg-background text-slate-900 antialiased;
   font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 a {
