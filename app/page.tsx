@@ -24,8 +24,8 @@ export default function HomePage() {
       </div>
 
       <div className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900">
-        Expanding now: university-wide events, including more programming from groups like SCDC and other campus
-        organizations.
+        Now including Steinbright Career Development Center (SCDC) programming, with more campus organizations on the
+        way.
       </div>
 
       <FilterBar events={upcomingEvents} tags={tags} hosts={hosts} />
