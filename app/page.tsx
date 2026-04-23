@@ -14,18 +14,17 @@ export default function HomePage() {
   const hosts = getAllHosts();
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-5">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">Upcoming events</h1>
-        <p className="mt-2 max-w-2xl text-sm text-slate-600 sm:text-base">
-          One clean feed for Drexel events. The directory is starting with finance, career, and student organization
-          programming and expanding toward a broader university-wide calendar.
+        <h1 className="text-3xl font-semibold tracking-tight text-stone-950">Upcoming events</h1>
+        <p className="mt-2 max-w-[42rem] text-[0.9375rem] leading-6 text-stone-600">
+          One clean feed for campus events, starting with finance, career, and student organization programming and
+          expanding university-wide.
         </p>
       </div>
 
-      <div className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900">
-        Now including Steinbright Career Development Center (SCDC) programming, with more campus organizations on the
-        way.
+      <div className="rounded-xl border border-amber-200 bg-amber-100 px-4 py-3 text-sm text-amber-900">
+        Now including Career Development Center programming, with more campus organizations on the way.
       </div>
 
       <FilterBar events={upcomingEvents} tags={tags} hosts={hosts} />

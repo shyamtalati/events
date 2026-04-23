@@ -7,8 +7,8 @@
 }
 
 body {
-  @apply bg-background text-slate-900 antialiased;
-  font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  @apply bg-background text-stone-950 antialiased;
+  font-family: var(--font-brand), "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

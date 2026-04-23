@@ -31,13 +31,13 @@ export function EventCard({ event }: EventCardProps) {
     <li>
       <Link
         href={`/events/${event.slug}`}
-        className="block rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-accent hover:shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+        className="block rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-[border-color,box-shadow] hover:border-accent hover:shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
       >
-        <p className="text-sm text-slate-500">{formatDateTime(event.startsAt, event.endsAt)}</p>
-        <h3 className="mt-1 text-lg font-semibold text-slate-900">{event.title}</h3>
-        <p className="mt-1 text-sm text-slate-700">{event.hostOrg}</p>
-        <p className="mt-1 text-sm text-slate-600">{event.location}</p>
-        <div className="mt-3 flex flex-wrap gap-2">
+        <p className="text-[0.8125rem] text-slate-500">{formatDateTime(event.startsAt, event.endsAt)}</p>
+        <h3 className="mt-1 text-[1.0625rem] font-semibold tracking-tight text-stone-950">{event.title}</h3>
+        <p className="mt-0.5 text-[0.8125rem] text-slate-700">{event.hostOrg}</p>
+        <p className="mt-0.5 text-[0.8125rem] text-slate-600">{event.location}</p>
+        <div className="mt-2.5 flex flex-wrap gap-1.5">
           {event.tags.map((tag) => (
             <TagChip key={`${event.slug}-${tag}`} label={tag} />
           ))}
