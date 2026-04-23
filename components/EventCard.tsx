@@ -28,10 +28,10 @@ type EventCardProps = {
 
 export function EventCard({ event }: EventCardProps) {
   return (
-    <li>
+    <li className="h-full">
       <Link
         href={`/events/${event.slug}`}
-        className="block rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-[border-color,box-shadow] hover:border-accent hover:shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+        className="block h-full rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-[border-color,box-shadow] hover:border-accent hover:shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
       >
         <p className="text-[0.8125rem] text-slate-500">{formatDateTime(event.startsAt, event.endsAt)}</p>
         <h3 className="mt-1 text-[1.0625rem] font-semibold tracking-tight text-stone-950">{event.title}</h3>
