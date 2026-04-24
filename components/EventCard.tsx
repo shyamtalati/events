@@ -10,11 +10,13 @@ function formatDateTime(startsAt: string, endsAt?: string) {
     weekday: 'short',
     month: 'short',
     day: 'numeric',
+    timeZone: 'America/New_York',
   });
 
   const timeFormatter = new Intl.DateTimeFormat('en-US', {
     hour: 'numeric',
     minute: '2-digit',
+    timeZone: 'America/New_York',
   });
 
   const base = `${dateFormatter.format(start)} · ${timeFormatter.format(start)}`;
