@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { type Event, type Tag } from '@/data/events';
 import { EventCard } from '@/components/EventCard';
 import { filterEvents, groupEventsByDate, type DateRange } from '@/lib/events';
@@ -15,8 +15,6 @@ type FilterBarProps = {
   events: Event[];
   tags: Tag[];
   hosts: string[];
-  initialSearch?: string;
-  initialDateRange?: DateRange;
 };
 
 const dateRangeOptions: Array<{ value: DateRange; label: string }> = [
@@ -25,9 +23,17 @@ const dateRangeOptions: Array<{ value: DateRange; label: string }> = [
   { value: 'all', label: 'All' },
 ];
 
-export function FilterBar({ events, tags, hosts, initialSearch = '', initialDateRange = 'all' }: FilterBarProps) {
-  const [query, setQuery] = useState(initialSearch);
-  const [dateRange, setDateRange] = useState<DateRange>(initialDateRange);
+function readDateRange(value: string | null): DateRange | null {
+  if (value === 'this-week' || value === 'this-month' || value === 'all') {
+    return value;
+  }
+
+  return null;
+}
+
+export function FilterBar({ events, tags, hosts }: FilterBarProps) {
+  const [query, setQuery] = useState('');
+  const [dateRange, setDateRange] = useState<DateRange>('all');
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [selectedHosts, setSelectedHosts] = useState<string[]>([]);
   const [email, setEmail] = useState('');
@@ -35,6 +41,20 @@ export function FilterBar({ events, tags, hosts, initialSearch = '', initialDate
   const [submitting, setSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<{ tone: 'info' | 'success' | 'error'; text: string } | null>(null);
   const [debugUrl, setDebugUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const queryParam = params.get('q') ?? '';
+    const rangeParam = readDateRange(params.get('range'));
+
+    if (queryParam) {
+      setQuery(queryParam);
+    }
+
+    if (rangeParam) {
+      setDateRange(rangeParam);
+    }
+  }, []);
 
   const toggleTag = (tag: Tag) => {
     setSelectedTags((current) =>
