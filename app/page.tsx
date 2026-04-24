@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { EventCard } from '@/components/EventCard';
 import { FilterBar } from '@/components/FilterBar';
-import { getAllHosts, getAllTags, getFeaturedThisWeek, getUpcoming, type DateRange } from '@/lib/events';
+import { getAllHosts, getAllTags, getFeaturedThisWeek, getUpcoming } from '@/lib/events';
 
 export const metadata: Metadata = {
   title: 'Upcoming Events | Drexel University Events',
@@ -9,32 +9,11 @@ export const metadata: Metadata = {
     'Discover upcoming Drexel events in one place, starting with finance, career, and student organization programming as the directory expands university-wide.',
 };
 
-type HomePageProps = {
-  searchParams?: {
-    q?: string | string[];
-    range?: string | string[];
-  };
-};
-
-function readParam(value: string | string[] | undefined) {
-  return Array.isArray(value) ? value[0] ?? '' : value ?? '';
-}
-
-function readDateRange(value: string): DateRange {
-  if (value === 'this-week' || value === 'this-month' || value === 'all') {
-    return value;
-  }
-
-  return 'all';
-}
-
-export default function HomePage({ searchParams }: HomePageProps) {
+export default function HomePage() {
   const upcomingEvents = getUpcoming();
   const tags = getAllTags();
   const hosts = getAllHosts();
   const featuredEvents = getFeaturedThisWeek(upcomingEvents);
-  const initialSearch = readParam(searchParams?.q);
-  const initialDateRange = readDateRange(readParam(searchParams?.range));
 
   return (
     <div className="space-y-9">
@@ -80,13 +59,7 @@ export default function HomePage({ searchParams }: HomePageProps) {
         </ul>
       </section>
 
-      <FilterBar
-        events={upcomingEvents}
-        tags={tags}
-        hosts={hosts}
-        initialSearch={initialSearch}
-        initialDateRange={initialDateRange}
-      />
+      <FilterBar events={upcomingEvents} tags={tags} hosts={hosts} />
     </div>
   );
 }
