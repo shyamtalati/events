@@ -14,7 +14,7 @@ const config: Config = {
         accent: '#1d4ed8',
       },
       maxWidth: {
-        content: '58rem',
+        content: '72rem',
       },
     },
   },
