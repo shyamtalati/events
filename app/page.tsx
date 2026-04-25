@@ -53,8 +53,8 @@ export default function HomePage() {
             <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
               {[
                 { value: upcomingEvents.length, label: 'upcoming events' },
-                { value: 'Weekly', label: 'curated rhythm' },
-                { value: 'Career', label: 'and student life focus' },
+                { value: 'Updated', label: 'weekly' },
+                { value: 'Career-focused', label: 'and student life ready' },
               ].map((item) => (
                 <div key={`${item.value}-${item.label}`} className="rounded-lg border border-line bg-surface p-4">
                   <p className="text-2xl font-semibold tracking-tight text-ink">{item.value}</p>
