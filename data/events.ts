@@ -58,18 +58,6 @@ export const events: Event[] = [
       'https://www.lebow.drexel.edu/event/2026/04/28/awkward-networker-networking-people-who-hate-networking',
   },
   {
-    slug: 'lebow-finance-networking-night-2026-04-28',
-    title: 'LeBow Finance Networking Night',
-    startsAt: '2026-04-28T18:00:00-04:00',
-    endsAt: '2026-04-28T20:00:00-04:00',
-    location: 'Gerri C. LeBow Hall, Atrium',
-    hostOrg: 'LeBow Finance Society',
-    tags: ['Networking', 'Recruiting'],
-    description:
-      'Meet alumni and recruiters from regional investment firms, commercial banks, and consulting teams. Bring your resume and prepare a quick intro.',
-    rsvpUrl: 'https://example.com/lebow-networking-night',
-  },
-  {
     slug: 'dufa-spring-stock-pitch-2026-04-30',
     title: 'DUFA Spring Stock Pitch Showcase',
     startsAt: '2026-04-30T17:30:00-04:00',
