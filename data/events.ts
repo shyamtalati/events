@@ -45,6 +45,19 @@ export const events: Event[] = [
       'https://www.lebow.drexel.edu/event/2026/05/06/ready-set-hired-alumni-interview-tips?lor=1&utm_source=mass_mailer&utm_medium=email&utm_content=2007926&utm_campaign=uni_targeted_emails',
   },
   {
+    slug: 'awkward-networker-networking-people-who-hate-networking-2026-04-28',
+    title: 'The Awkward Networker: Networking for People Who Hate Networking',
+    startsAt: '2026-04-28T17:00:00-04:00',
+    endsAt: '2026-04-28T18:00:00-04:00',
+    location: 'Gerri C. LeBow Hall, Room 722',
+    hostOrg: 'LeBow College of Business',
+    tags: ['Networking', 'Workshop'],
+    description:
+      'Sean Hand leads a low-pressure session for senior undergraduate and graduate students who want practical ways to build authentic professional relationships. Snacks and refreshments follow.',
+    rsvpUrl:
+      'https://www.lebow.drexel.edu/event/2026/04/28/awkward-networker-networking-people-who-hate-networking',
+  },
+  {
     slug: 'lebow-finance-networking-night-2026-04-28',
     title: 'LeBow Finance Networking Night',
     startsAt: '2026-04-28T18:00:00-04:00',
