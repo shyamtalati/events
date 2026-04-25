@@ -54,6 +54,15 @@ export function FilterBar({ events, tags, hosts }: FilterBarProps) {
     if (rangeParam) {
       setDateRange(rangeParam);
     }
+
+    if (window.location.hash === '#events') {
+      const scrollToEvents = () => {
+        document.getElementById('events')?.scrollIntoView({ block: 'start' });
+      };
+
+      window.requestAnimationFrame(scrollToEvents);
+      window.setTimeout(scrollToEvents, 250);
+    }
   }, []);
 
   const toggleTag = (tag: Tag) => {

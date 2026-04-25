@@ -2,8 +2,8 @@ import Link from 'next/link';
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-line/80 bg-surface/90 shadow-[0_14px_32px_rgba(24,31,36,0.06)] backdrop-blur-xl">
-      <div className="mx-auto grid w-full max-w-content gap-3 px-4 py-3 sm:px-6 md:grid-cols-[auto_minmax(14rem,1fr)_auto] md:items-center lg:px-8">
+    <header className="sticky top-0 z-50 bg-background/80 py-3 backdrop-blur-xl">
+      <div className="mx-auto grid w-[calc(100%-2rem)] max-w-content gap-3 rounded-lg border border-line/80 bg-surface/95 p-3 shadow-[0_18px_46px_rgba(24,31,36,0.08)] sm:w-[calc(100%-3rem)] sm:grid-cols-[auto_minmax(12rem,1fr)_auto] sm:items-center lg:w-[calc(100%-4rem)]">
         <Link href="/" className="flex items-center gap-3 text-ink">
           <span className="grid h-10 w-10 place-items-center rounded-lg bg-accent text-[0.8125rem] font-semibold text-white shadow-sm">
             CE
@@ -11,7 +11,7 @@ export function Header() {
           <span className="text-[0.9375rem] font-semibold tracking-tight">Campus Event Guide</span>
         </Link>
 
-        <form action="/" className="order-3 md:order-none">
+        <form action="/" className="order-3 sm:order-none">
           <label htmlFor="site-search" className="sr-only">
             Search events
           </label>

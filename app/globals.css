@@ -23,6 +23,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 a {
@@ -32,4 +33,12 @@ a {
 ::selection {
   background: rgb(var(--theme-secondary) / 0.35);
   color: rgb(var(--theme-ink));
+}
+
+.landing-media-rail {
+  scrollbar-width: none;
+}
+
+.landing-media-rail::-webkit-scrollbar {
+  display: none;
 }
