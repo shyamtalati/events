@@ -4,10 +4,21 @@
 
 :root {
   color-scheme: light;
+  --theme-accent: 63 154 174;
+  --theme-secondary: 121 201 197;
+  --theme-warm: 255 226 175;
+  --theme-attention: 249 110 91;
+  --theme-page: 255 252 246;
+  --theme-surface: 255 255 255;
+  --theme-muted: 247 249 248;
+  --theme-ink: 24 31 36;
+  --theme-body: 74 86 92;
+  --theme-soft: 112 124 130;
+  --theme-line: 222 229 228;
 }
 
 body {
-  @apply bg-background text-stone-950 antialiased;
+  @apply bg-background text-ink antialiased;
   font-family: var(--font-brand), "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   min-height: 100vh;
   display: flex;
@@ -16,4 +27,9 @@ body {
 
 a {
   @apply transition-colors;
+}
+
+::selection {
+  background: rgb(var(--theme-secondary) / 0.35);
+  color: rgb(var(--theme-ink));
 }

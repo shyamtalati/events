@@ -18,13 +18,13 @@ const googleSansFlex = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://universityevent.netlify.app'),
-  title: 'Drexel University Events',
+  title: 'Campus Event Guide',
   description:
-    'A clean, curated list of upcoming Drexel events, with the directory expanding from finance and career programming to university-wide student events.',
+    'A calm, curated guide to university events, from career fairs and recruiting sessions to workshops, speakers, and student organization programming.',
   openGraph: {
-    title: 'Drexel University Events',
+    title: 'Campus Event Guide',
     description:
-      'A clean, curated list of upcoming Drexel events, with the directory expanding from finance and career programming to university-wide student events.',
+      'A calm, curated guide to university events, from career fairs and recruiting sessions to workshops, speakers, and student organization programming.',
     type: 'website',
     url: 'https://universityevent.netlify.app',
     images: [
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
         url: '/og-image.svg',
         width: 1200,
         height: 630,
-        alt: 'Drexel University Events',
+        alt: 'Campus Event Guide',
       },
     ],
   },
@@ -43,7 +43,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" className={googleSansFlex.variable}>
       <body>
         <Header />
-        <main className="mx-auto w-full max-w-content flex-1 px-4 py-8 sm:px-6 sm:py-10 lg:px-8">{children}</main>
+        <main className="mx-auto w-full max-w-content flex-1 px-4 py-10 sm:px-6 sm:py-12 lg:px-8">{children}</main>
         <Footer />
       </body>
     </html>

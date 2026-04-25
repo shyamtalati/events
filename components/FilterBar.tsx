@@ -148,38 +148,38 @@ export function FilterBar({ events, tags, hosts }: FilterBarProps) {
     feedback?.tone === 'success'
       ? 'border-emerald-200 bg-emerald-50 text-emerald-900'
       : feedback?.tone === 'error'
-        ? 'border-rose-200 bg-rose-50 text-rose-900'
-        : 'border-blue-200 bg-blue-50 text-blue-900';
+        ? 'border-attention/35 bg-attention/10 text-ink'
+        : 'border-accent/25 bg-accent/10 text-ink';
 
   return (
-    <section id="events" className="scroll-mt-28 space-y-4" aria-labelledby="feed-heading">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+    <section id="events" className="scroll-mt-28 space-y-6" aria-labelledby="feed-heading">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-[0.75rem] font-semibold uppercase tracking-[0.2em] text-blue-700">Browse all events</p>
-          <h2 id="feed-heading" className="mt-1 text-2xl font-semibold tracking-tight text-stone-950">
-            Full event feed
+          <p className="text-[0.75rem] font-semibold uppercase tracking-[0.22em] text-accent">Browse all events</p>
+          <h2 id="feed-heading" className="mt-2 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+            Explore the full calendar
           </h2>
         </div>
-        <p className="text-sm text-slate-600">
+        <p className="rounded-full border border-line bg-surface px-3 py-1.5 text-sm text-body shadow-sm">
           Showing {filtered.length} of {events.length} upcoming events
         </p>
       </div>
 
-      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="rounded-lg border border-line bg-surface p-5 shadow-[0_14px_36px_rgba(24,31,36,0.055)]">
         <div className="grid gap-4 lg:grid-cols-[minmax(14rem,0.8fr)_minmax(0,1fr)] lg:items-end">
           <label className="block space-y-2">
-            <span className="text-[0.8125rem] font-medium text-slate-700">Search the feed</span>
+            <span className="text-[0.8125rem] font-medium text-body">Search the feed</span>
             <input
               type="search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Try resume, finance, virtual"
-              className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-[0.875rem] text-stone-950 outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20"
+              className="h-11 w-full rounded-lg border border-line bg-muted/60 px-3 text-[0.875rem] text-ink outline-none transition placeholder:text-soft focus:border-accent focus:bg-surface focus:ring-2 focus:ring-accent/20"
             />
           </label>
 
           <fieldset>
-            <legend className="mb-2 text-[0.8125rem] font-medium text-slate-700">Date range</legend>
+            <legend className="mb-2 text-[0.8125rem] font-medium text-body">Date range</legend>
             <div className="flex flex-wrap gap-2">
               {dateRangeOptions.map((option) => (
                 <button
@@ -190,7 +190,7 @@ export function FilterBar({ events, tags, hosts }: FilterBarProps) {
                   className={`rounded-lg border px-3 py-2 text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
                     dateRange === option.value
                       ? 'border-accent bg-accent text-white'
-                      : 'border-slate-300 bg-white text-slate-700 hover:border-slate-400'
+                      : 'border-line bg-surface text-body hover:border-secondary hover:bg-secondary/10'
                   }`}
                 >
                   {option.label}
@@ -202,7 +202,7 @@ export function FilterBar({ events, tags, hosts }: FilterBarProps) {
 
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
           <fieldset>
-            <legend className="mb-2 text-[0.8125rem] font-medium text-slate-700">Tags</legend>
+            <legend className="mb-2 text-[0.8125rem] font-medium text-body">Tags</legend>
             <div className="flex flex-wrap gap-2">
               {tags.map((tag) => {
                 const active = selectedTags.includes(tag);
@@ -214,8 +214,8 @@ export function FilterBar({ events, tags, hosts }: FilterBarProps) {
                     onClick={() => toggleTag(tag)}
                     className={`rounded-lg border px-3 py-1.5 text-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
                       active
-                        ? 'border-accent bg-blue-50 text-blue-700'
-                        : 'border-slate-300 bg-white text-slate-700 hover:border-slate-400'
+                        ? 'border-accent bg-accent/10 text-ink'
+                        : 'border-line bg-surface text-body hover:border-secondary hover:bg-secondary/10'
                     }`}
                   >
                     {tag}
@@ -226,37 +226,39 @@ export function FilterBar({ events, tags, hosts }: FilterBarProps) {
           </fieldset>
 
           <fieldset>
-            <legend className="mb-2 text-[0.8125rem] font-medium text-slate-700">Host organizations</legend>
-            <div className="flex flex-wrap gap-2">
-              {hosts.map((host) => {
-                const active = selectedHosts.includes(host);
-                return (
-                  <button
-                    key={host}
-                    type="button"
-                    aria-pressed={active}
-                    onClick={() => toggleHost(host)}
-                    className={`rounded-lg border px-3 py-1.5 text-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
-                      active
-                        ? 'border-accent bg-blue-50 text-blue-700'
-                        : 'border-slate-300 bg-white text-slate-700 hover:border-slate-400'
-                    }`}
-                  >
-                    {host}
-                  </button>
-                );
-              })}
+            <legend className="mb-2 text-[0.8125rem] font-medium text-body">Host organizations</legend>
+            <div className="max-h-36 overflow-y-auto rounded-lg border border-line bg-muted/40 p-2">
+              <div className="flex flex-wrap gap-2">
+                {hosts.map((host) => {
+                  const active = selectedHosts.includes(host);
+                  return (
+                    <button
+                      key={host}
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => toggleHost(host)}
+                      className={`rounded-lg border px-3 py-1.5 text-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
+                        active
+                          ? 'border-accent bg-surface text-ink shadow-sm'
+                          : 'border-transparent bg-transparent text-body hover:border-secondary/45 hover:bg-secondary/10'
+                      }`}
+                    >
+                      {host}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </fieldset>
         </div>
 
         {activeFilterCount > 0 ? (
-          <div className="mt-4 flex items-center justify-between border-t border-slate-200 pt-3 text-sm text-slate-600">
+          <div className="mt-5 flex items-center justify-between border-t border-line pt-4 text-sm text-body">
             <span>{activeFilterCount} active filter{activeFilterCount === 1 ? '' : 's'}</span>
             <button
               type="button"
               onClick={clearFilters}
-              className="font-medium text-blue-700 transition hover:text-blue-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+              className="font-medium text-accent transition hover:text-accent/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
             >
               Clear filters
             </button>
@@ -265,18 +267,18 @@ export function FilterBar({ events, tags, hosts }: FilterBarProps) {
       </div>
 
       {filtered.length > 0 ? (
-        <div className="space-y-6">
+        <div className="space-y-8">
           {groupedEvents.map((group) => (
             <section key={group.id} aria-labelledby={`events-${group.id}`}>
-              <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-slate-200 pb-2">
-                <h3 id={`events-${group.id}`} className="text-lg font-semibold tracking-tight text-stone-950">
+              <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-line pb-3">
+                <h3 id={`events-${group.id}`} className="text-lg font-semibold tracking-tight text-ink">
                   {group.label}
                 </h3>
-                <span className="text-sm text-slate-500">
+                <span className="text-sm text-soft">
                   {group.events.length} event{group.events.length === 1 ? '' : 's'}
                 </span>
               </div>
-              <ul className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {group.events.map((event) => (
                   <EventCard key={event.slug} event={event} />
                 ))}
@@ -285,28 +287,28 @@ export function FilterBar({ events, tags, hosts }: FilterBarProps) {
           ))}
         </div>
       ) : (
-        <div className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-600">
+        <div className="rounded-lg border border-dashed border-line bg-surface p-8 text-center text-sm text-body">
           No events match your filters right now. Try broadening your selections or check back as more campus
           organizations are added.
         </div>
       )}
 
-      <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm" aria-labelledby="alerts-heading">
+      <section className="rounded-lg border border-line bg-surface p-6 shadow-[0_14px_36px_rgba(24,31,36,0.055)]" aria-labelledby="alerts-heading">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(18rem,1fr)] lg:items-start">
           <div>
-            <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.22em] text-blue-700">Email alerts</p>
-            <h2 id="alerts-heading" className="mt-1.5 text-lg font-semibold tracking-tight text-stone-950">
+            <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.22em] text-accent">Email alerts</p>
+            <h2 id="alerts-heading" className="mt-1.5 text-lg font-semibold tracking-tight text-ink">
               Get a calm digest instead of a flood
             </h2>
-            <p className="mt-3 text-[0.8125rem] leading-[1.65] text-slate-600">
+            <p className="mt-3 text-[0.8125rem] leading-[1.65] text-body">
               We send a daily email digest only when there are new matching events in the next week. No repeated
               reminders, and never more than one alert email per day.
             </p>
-            <div className="mt-4 border-t border-slate-200 pt-4 text-sm text-slate-700">
-              <p className="font-semibold text-stone-950">Current alert filter</p>
+            <div className="mt-4 border-t border-line pt-4 text-sm text-body">
+              <p className="font-semibold text-ink">Current alert filter</p>
               <p className="mt-1">{alertSummary}</p>
             </div>
-            <p className="mt-4 text-xs leading-5 text-slate-500">
+            <p className="mt-4 text-xs leading-5 text-soft">
               Email addresses are encrypted at rest in Netlify Blobs and only handled inside Netlify Functions.
               Delivery credentials stay in Netlify environment variables instead of the client.
             </p>
@@ -314,15 +316,15 @@ export function FilterBar({ events, tags, hosts }: FilterBarProps) {
 
           <div className="space-y-4">
             <label className="block space-y-2">
-              <span className="text-[0.8125rem] font-medium text-slate-700">Email address</span>
+              <span className="text-[0.8125rem] font-medium text-body">Email address</span>
               <input
                 type="email"
                 inputMode="email"
                 autoComplete="email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                placeholder="you@drexel.edu"
-                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-[0.875rem] text-stone-950 outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20"
+                placeholder="you@school.edu"
+                className="w-full rounded-lg border border-line bg-muted/50 px-3 py-2 text-[0.875rem] text-ink outline-none transition placeholder:text-soft focus:border-accent focus:bg-surface focus:ring-2 focus:ring-accent/20"
               />
             </label>
 
@@ -331,10 +333,10 @@ export function FilterBar({ events, tags, hosts }: FilterBarProps) {
                 type="checkbox"
                 checked={consent}
                 onChange={(event) => setConsent(event.target.checked)}
-                className="mt-1 h-4 w-4 rounded border-slate-300 text-accent focus:ring-accent"
+                className="mt-1 h-4 w-4 rounded border-line text-accent focus:ring-accent"
               />
-              <span className="text-[0.8125rem] leading-[1.55] text-slate-600">
-                I agree to receive a filter-based email digest for matching Drexel events. We only send when there are
+              <span className="text-[0.8125rem] leading-[1.55] text-body">
+                I agree to receive a filter-based email digest for matching campus events. We only send when there are
                 new matches, and never more than once per day.
               </span>
             </label>
@@ -343,15 +345,15 @@ export function FilterBar({ events, tags, hosts }: FilterBarProps) {
               type="button"
               onClick={requestConfirmationEmail}
               disabled={submitting}
-              className="w-full rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+              className="w-full rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-white transition hover:bg-accent/90 disabled:cursor-not-allowed disabled:bg-soft"
             >
               {submitting ? 'Sending confirmation...' : 'Send confirmation email'}
             </button>
 
             {debugUrl ? (
-              <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+              <div className="rounded-lg border border-warm bg-warm/25 p-3 text-sm text-ink">
                 Local testing link:{' '}
-                <a href={debugUrl} className="font-semibold underline decoration-amber-500 underline-offset-2">
+                <a href={debugUrl} className="font-semibold text-accent underline decoration-accent/40 underline-offset-2">
                   Confirm email alerts
                 </a>
               </div>

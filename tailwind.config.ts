@@ -10,11 +10,20 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: '#faf8f5',
-        accent: '#1d4ed8',
+        background: 'rgb(var(--theme-page) / <alpha-value>)',
+        surface: 'rgb(var(--theme-surface) / <alpha-value>)',
+        muted: 'rgb(var(--theme-muted) / <alpha-value>)',
+        ink: 'rgb(var(--theme-ink) / <alpha-value>)',
+        body: 'rgb(var(--theme-body) / <alpha-value>)',
+        soft: 'rgb(var(--theme-soft) / <alpha-value>)',
+        line: 'rgb(var(--theme-line) / <alpha-value>)',
+        accent: 'rgb(var(--theme-accent) / <alpha-value>)',
+        secondary: 'rgb(var(--theme-secondary) / <alpha-value>)',
+        warm: 'rgb(var(--theme-warm) / <alpha-value>)',
+        attention: 'rgb(var(--theme-attention) / <alpha-value>)',
       },
       maxWidth: {
-        content: '72rem',
+        content: '76rem',
       },
     },
   },

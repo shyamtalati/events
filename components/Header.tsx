@@ -2,13 +2,13 @@ import Link from 'next/link';
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
-      <div className="mx-auto grid w-full max-w-content gap-3 px-4 py-3 sm:px-6 md:grid-cols-[auto_minmax(12rem,1fr)_auto] md:items-center lg:px-8">
-        <Link href="/" className="flex items-center gap-2.5 text-stone-950">
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-slate-950 text-[0.8125rem] font-semibold text-white">
-            DU
+    <header className="sticky top-0 z-50 border-b border-line/80 bg-surface/90 shadow-[0_14px_32px_rgba(24,31,36,0.06)] backdrop-blur-xl">
+      <div className="mx-auto grid w-full max-w-content gap-3 px-4 py-3 sm:px-6 md:grid-cols-[auto_minmax(14rem,1fr)_auto] md:items-center lg:px-8">
+        <Link href="/" className="flex items-center gap-3 text-ink">
+          <span className="grid h-10 w-10 place-items-center rounded-lg bg-accent text-[0.8125rem] font-semibold text-white shadow-sm">
+            CE
           </span>
-          <span className="text-[0.9375rem] font-semibold tracking-tight">Drexel Events</span>
+          <span className="text-[0.9375rem] font-semibold tracking-tight">Campus Event Guide</span>
         </Link>
 
         <form action="/" className="order-3 md:order-none">
@@ -19,14 +19,14 @@ export function Header() {
             id="site-search"
             name="q"
             type="search"
-            placeholder="Search events, hosts, or tags"
-            className="h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-stone-950 outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20"
+            placeholder="Search events, hosts, tags"
+            className="h-10 w-full rounded-lg border border-line bg-muted/60 px-3 text-sm text-ink outline-none transition placeholder:text-soft focus:border-accent focus:bg-surface focus:ring-2 focus:ring-accent/20"
           />
         </form>
 
         <Link
           href="/?range=this-week#events"
-          className="justify-self-end rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+          className="justify-self-end rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-accent/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
         >
           This week
         </Link>
