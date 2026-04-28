@@ -58,16 +58,17 @@ export const events: Event[] = [
       'https://www.lebow.drexel.edu/event/2026/04/28/awkward-networker-networking-people-who-hate-networking',
   },
   {
-    slug: 'dufa-spring-stock-pitch-2026-04-30',
-    title: 'DUFA Spring Stock Pitch Showcase',
-    startsAt: '2026-04-30T17:30:00-04:00',
-    endsAt: '2026-04-30T19:30:00-04:00',
-    location: 'Academic Building 208',
-    hostOrg: 'Drexel University Finance Association',
-    tags: ['Competition', 'Speaker'],
+    slug: 'conversation-with-rich-powers-05-2026-04-30',
+    title: "A Conversation with Rich Powers '05",
+    startsAt: '2026-04-30T18:00:00-04:00',
+    endsAt: '2026-04-30T20:00:00-04:00',
+    location: 'Gerri C. LeBow Hall, Thomas J. Hindelang Colloquium 722',
+    hostOrg: 'Howley Finance Academy',
+    tags: ['Speaker', 'Networking'],
     description:
-      'Finalist teams present long ideas to a panel of buy-side professionals. Open to all students interested in equities and valuation.',
-    rsvpUrl: 'https://example.com/dufa-stock-pitch',
+      'Rich Powers, a LeBow MBA alumnus and Vanguard leader, joins David Becher for a conversation on private equity, private markets, individual investors, and career advice for students pursuing investment management.',
+    rsvpUrl:
+      'https://www.lebow.drexel.edu/event/2026/04/30/conversation-rich-powers-05',
   },
   {
     slug: 'bennett-thrasher-recruiting-coffee-chat-2026-05-01',
