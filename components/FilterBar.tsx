@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { type Event, type Tag } from '@/data/events';
 import { EventCard } from '@/components/EventCard';
@@ -17,11 +18,31 @@ type FilterBarProps = {
   hosts: string[];
 };
 
+type EventViewMode = 'calendar' | 'list';
+
 const dateRangeOptions: Array<{ value: DateRange; label: string }> = [
   { value: 'this-week', label: 'This Week' },
   { value: 'this-month', label: 'This Month' },
   { value: 'all', label: 'All' },
 ];
+
+const viewOptions: Array<{ value: EventViewMode; label: string }> = [
+  { value: 'calendar', label: 'Calendar' },
+  { value: 'list', label: 'List' },
+];
+
+const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+const monthLabelFormatter = new Intl.DateTimeFormat('en-US', {
+  month: 'long',
+  year: 'numeric',
+});
+
+const eventTimeFormatter = new Intl.DateTimeFormat('en-US', {
+  hour: 'numeric',
+  minute: '2-digit',
+  timeZone: 'America/New_York',
+});
 
 function readDateRange(value: string | null): DateRange | null {
   if (value === 'this-week' || value === 'this-month' || value === 'all') {
@@ -31,9 +52,55 @@ function readDateRange(value: string | null): DateRange | null {
   return null;
 }
 
+function getStartOfMonth(date: Date) {
+  return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+function getStartOfEventMonth(startsAt: string) {
+  const [year, month] = startsAt.slice(0, 7).split('-').map(Number);
+
+  return new Date(year, month - 1, 1);
+}
+
+function formatDateId(date: Date) {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const day = `${date.getDate()}`.padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
+function buildCalendarDays(monthDate: Date) {
+  const monthStart = getStartOfMonth(monthDate);
+  const gridStart = new Date(monthStart);
+  gridStart.setDate(monthStart.getDate() - monthStart.getDay());
+  const todayId = formatDateId(new Date());
+
+  return Array.from({ length: 42 }, (_, index) => {
+    const date = new Date(gridStart);
+    date.setDate(gridStart.getDate() + index);
+    const id = formatDateId(date);
+
+    return {
+      id,
+      dayNumber: date.getDate(),
+      inCurrentMonth: date.getMonth() === monthDate.getMonth(),
+      isToday: id === todayId,
+    };
+  });
+}
+
+function formatEventTime(startsAt: string) {
+  return eventTimeFormatter.format(new Date(startsAt));
+}
+
 export function FilterBar({ events, tags, hosts }: FilterBarProps) {
   const [query, setQuery] = useState('');
   const [dateRange, setDateRange] = useState<DateRange>('all');
+  const [viewMode, setViewMode] = useState<EventViewMode>('calendar');
+  const [calendarMonth, setCalendarMonth] = useState(() =>
+    events[0] ? getStartOfEventMonth(events[0].startsAt) : getStartOfMonth(new Date()),
+  );
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [selectedHosts, setSelectedHosts] = useState<string[]>([]);
   const [email, setEmail] = useState('');
@@ -82,6 +149,32 @@ export function FilterBar({ events, tags, hosts }: FilterBarProps) {
     [dateRange, events, query, selectedHosts, selectedTags],
   );
   const groupedEvents = useMemo(() => groupEventsByDate(filtered), [filtered]);
+  const calendarDays = useMemo(() => buildCalendarDays(calendarMonth), [calendarMonth]);
+  const eventsByDate = useMemo(() => {
+    const groups = new Map<string, Event[]>();
+
+    filtered.forEach((event) => {
+      const dateId = event.startsAt.slice(0, 10);
+      const existingEvents = groups.get(dateId);
+
+      if (existingEvents) {
+        existingEvents.push(event);
+        return;
+      }
+
+      groups.set(dateId, [event]);
+    });
+
+    return groups;
+  }, [filtered]);
+  const calendarMonthEventCount = useMemo(
+    () => {
+      const monthPrefix = `${calendarMonth.getFullYear()}-${`${calendarMonth.getMonth() + 1}`.padStart(2, '0')}`;
+
+      return filtered.filter((event) => event.startsAt.startsWith(monthPrefix)).length;
+    },
+    [calendarMonth, filtered],
+  );
   const alertPreferences = useMemo(
     () =>
       canonicalizeAlertPreferences({
@@ -103,6 +196,14 @@ export function FilterBar({ events, tags, hosts }: FilterBarProps) {
     setDateRange('all');
     setSelectedTags([]);
     setSelectedHosts([]);
+  };
+
+  const moveCalendarMonth = (monthOffset: number) => {
+    setCalendarMonth((current) => new Date(current.getFullYear(), current.getMonth() + monthOffset, 1));
+  };
+
+  const goToCurrentMonth = () => {
+    setCalendarMonth(getStartOfMonth(new Date()));
   };
 
   const readJson = async <T,>(response: Response) => {
@@ -169,9 +270,28 @@ export function FilterBar({ events, tags, hosts }: FilterBarProps) {
             Explore the full calendar
           </h2>
         </div>
-        <p className="rounded-full border border-line bg-surface px-3 py-1.5 text-sm text-body shadow-sm">
-          Showing {filtered.length} of {events.length} upcoming events
-        </p>
+        <div className="flex flex-col items-start gap-2 sm:items-end">
+          <div className="inline-flex rounded-lg border border-line bg-surface p-1 shadow-sm" aria-label="Event view">
+            {viewOptions.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                aria-pressed={viewMode === option.value}
+                onClick={() => setViewMode(option.value)}
+                className={`rounded-md px-3 py-1.5 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
+                  viewMode === option.value
+                    ? 'bg-accent text-white shadow-sm'
+                    : 'text-body hover:bg-muted hover:text-ink'
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+          <p className="rounded-full border border-line bg-surface px-3 py-1.5 text-sm text-body shadow-sm">
+            Showing {filtered.length} of {events.length} upcoming events
+          </p>
+        </div>
       </div>
 
       <div className="rounded-lg border border-line bg-surface p-5 shadow-[0_14px_36px_rgba(24,31,36,0.055)]">
@@ -277,23 +397,137 @@ export function FilterBar({ events, tags, hosts }: FilterBarProps) {
 
       {filtered.length > 0 ? (
         <div className="space-y-8">
-          {groupedEvents.map((group) => (
-            <section key={group.id} aria-labelledby={`events-${group.id}`}>
-              <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-line pb-3">
-                <h3 id={`events-${group.id}`} className="text-lg font-semibold tracking-tight text-ink">
-                  {group.label}
-                </h3>
-                <span className="text-sm text-soft">
-                  {group.events.length} event{group.events.length === 1 ? '' : 's'}
-                </span>
+          {viewMode === 'calendar' ? (
+            <section
+              className="rounded-lg border border-line bg-surface shadow-[0_14px_36px_rgba(24,31,36,0.055)]"
+              aria-labelledby="calendar-view-heading"
+            >
+              <div className="flex flex-col gap-4 border-b border-line p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+                <div>
+                  <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.2em] text-accent">
+                    Calendar view
+                  </p>
+                  <h3 id="calendar-view-heading" className="mt-1 text-xl font-semibold tracking-tight text-ink">
+                    {monthLabelFormatter.format(calendarMonth)}
+                  </h3>
+                  <p className="mt-1 text-sm text-body">
+                    {calendarMonthEventCount} matching event{calendarMonthEventCount === 1 ? '' : 's'} this month
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => moveCalendarMonth(-1)}
+                    className="rounded-lg border border-line bg-surface px-3 py-2 text-sm font-semibold text-body transition hover:border-secondary hover:bg-muted hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                  >
+                    Prev
+                  </button>
+                  <button
+                    type="button"
+                    onClick={goToCurrentMonth}
+                    className="rounded-lg border border-line bg-surface px-3 py-2 text-sm font-semibold text-body transition hover:border-secondary hover:bg-muted hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                  >
+                    Today
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveCalendarMonth(1)}
+                    className="rounded-lg border border-line bg-surface px-3 py-2 text-sm font-semibold text-body transition hover:border-secondary hover:bg-muted hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                  >
+                    Next
+                  </button>
+                </div>
               </div>
-              <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {group.events.map((event) => (
-                  <EventCard key={event.slug} event={event} />
-                ))}
-              </ul>
+
+              <div className="overflow-x-auto">
+                <div className="min-w-[48rem]">
+                  <div className="grid grid-cols-7 border-b border-line bg-muted/60">
+                    {weekdayLabels.map((weekday) => (
+                      <div key={weekday} className="px-3 py-2 text-center text-[0.75rem] font-semibold text-body">
+                        {weekday}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="grid grid-cols-7">
+                    {calendarDays.map((day) => {
+                      const dayEvents = eventsByDate.get(day.id) ?? [];
+
+                      return (
+                        <div
+                          key={day.id}
+                          className={`min-h-[9.75rem] border-b border-r border-line p-2 ${
+                            day.inCurrentMonth ? 'bg-surface' : 'bg-muted/35'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <span
+                              className={`grid h-7 w-7 place-items-center rounded-full text-sm font-semibold ${
+                                day.isToday
+                                  ? 'bg-accent text-white'
+                                  : day.inCurrentMonth
+                                    ? 'text-ink'
+                                    : 'text-soft'
+                              }`}
+                            >
+                              {day.dayNumber}
+                            </span>
+                            {dayEvents.length > 0 ? (
+                              <span className="text-[0.6875rem] font-semibold text-accent">
+                                {dayEvents.length}
+                              </span>
+                            ) : null}
+                          </div>
+
+                          <div className="mt-2 max-h-28 space-y-1 overflow-y-auto pr-1">
+                            {dayEvents.map((event) => (
+                              <Link
+                                key={event.slug}
+                                href={`/events/${event.slug}`}
+                                className="block rounded-md border border-accent/30 bg-accent/10 px-2 py-1.5 text-left transition hover:border-accent/55 hover:bg-accent/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                              >
+                                <span className="block text-[0.6875rem] font-semibold text-accent">
+                                  {formatEventTime(event.startsAt)}
+                                </span>
+                                <span className="mt-0.5 block text-[0.75rem] font-semibold leading-4 text-ink">
+                                  {event.title}
+                                </span>
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {calendarMonthEventCount === 0 ? (
+                <p className="border-t border-line px-4 py-3 text-sm text-body sm:px-5">
+                  No matching events in {monthLabelFormatter.format(calendarMonth)}. Try the next month or switch to
+                  list view to scan everything that matches your filters.
+                </p>
+              ) : null}
             </section>
-          ))}
+          ) : (
+            groupedEvents.map((group) => (
+              <section key={group.id} aria-labelledby={`events-${group.id}`}>
+                <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-line pb-3">
+                  <h3 id={`events-${group.id}`} className="text-lg font-semibold tracking-tight text-ink">
+                    {group.label}
+                  </h3>
+                  <span className="text-sm text-soft">
+                    {group.events.length} event{group.events.length === 1 ? '' : 's'}
+                  </span>
+                </div>
+                <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {group.events.map((event) => (
+                    <EventCard key={event.slug} event={event} />
+                  ))}
+                </ul>
+              </section>
+            ))
+          )}
         </div>
       ) : (
         <div className="rounded-lg border border-dashed border-line bg-surface p-8 text-center text-sm text-body">
