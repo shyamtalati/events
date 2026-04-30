@@ -132,7 +132,7 @@ export default function HomePage() {
           {
             eyebrow: 'Plan the week',
             title: 'A calmer way to choose where your time goes.',
-            copy: 'The homepage now opens like a guide, then moves naturally into featured events and the full calendar.',
+            copy: 'Browse by day, save promising events to your calendar, and keep the week from turning into a tab pile.',
           },
           {
             eyebrow: 'Find the signal',
